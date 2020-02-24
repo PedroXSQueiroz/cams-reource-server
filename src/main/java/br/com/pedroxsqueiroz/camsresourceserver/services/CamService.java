@@ -8,17 +8,6 @@ import br.com.pedroxsqueiroz.camsresourceserver.models.CamModel;
 import br.com.pedroxsqueiroz.camsresourceserver.models.ClientModel;
 
 @Service
-public class CamService extends AbstractNodeService<CamModel>{
-
-	@Autowired
-	private NodeConfig thisClientConfig;
-	
-	@Override
-	public CamModel save(CamModel cam) {
-		
-		cam.setClient( new ClientModel( this.thisClientConfig ) );
-		
-		return super.save(cam);
-	}
+public class CamService extends AbstractService<CamModel>{
 	
 }

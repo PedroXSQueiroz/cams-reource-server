@@ -24,7 +24,4 @@ public class ClientModel extends NodeModel{
 		super(config);
 	}
 	
-	@OneToMany(mappedBy = "client")
-	private List<CamModel> cams;
-	
 }

@@ -6,16 +6,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
+import java.util.concurrent.TimeoutException;
 
 import javax.annotation.PostConstruct;
 import javax.security.auth.kerberos.KeyTab;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import br.com.pedroxsqueiroz.camsresourceserver.config.NodeConfig;
+import br.com.pedroxsqueiroz.camsresourceserver.models.ServerModel;
+import br.com.pedroxsqueiroz.camsresourceserver.services.MessagingService;
 
 @SpringBootApplication
 public class CamsResourceServerApplication {
@@ -28,9 +32,23 @@ public class CamsResourceServerApplication {
 	private String localKeyLocation;
 	
 	@Autowired 
-	private NodeConfig localClientConfig;
+	private NodeConfig localNodeConfig;
+	
+	@Autowired
+	private MessagingService messagingService;
 	
 	@PostConstruct
+	public void initNode() throws IOException, TimeoutException 
+	{
+		
+		this.loadLocalKey();
+		
+		this.messagingService.connectServer( new ServerModel( this.localNodeConfig ) ); 
+		
+		this.messagingService.connectServers();
+		
+	}
+	
 	public void loadLocalKey( ) throws IOException 
 	{
 		
@@ -42,7 +60,7 @@ public class CamsResourceServerApplication {
 		
 		String key = new String(keyBytes, Charset.forName("UTF-8"));
 		
-		this.localClientConfig.setKey(key);
+		this.localNodeConfig.setKey(key);
 		
 		
 	}
@@ -54,12 +72,15 @@ public class CamsResourceServerApplication {
 	
 	private byte[] createLocalKey(Path localKeyPath) throws IOException {
 		
-		byte[] keyBuffer = new byte[256];
+		byte[] keyBuffer = new byte[25];
 		new Random().nextBytes(keyBuffer);
-		Files.createFile(localKeyPath);
-		Files.write(localKeyPath, keyBuffer);
 		
-		return keyBuffer;
+		byte[] keyBase64 = Base64.encodeBase64(keyBuffer);
+		
+		Files.createFile(localKeyPath);
+		Files.write(localKeyPath, keyBase64);
+		
+		return keyBase64;
 		
 	}
 	

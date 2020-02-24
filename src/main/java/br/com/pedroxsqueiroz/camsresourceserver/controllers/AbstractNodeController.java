@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.pedroxsqueiroz.camsresourceserver.models.NodeModel;
-import br.com.pedroxsqueiroz.camsresourceserver.services.AbstractNodeService;
+import br.com.pedroxsqueiroz.camsresourceserver.services.AbstractService;
 
 public class AbstractNodeController <T extends NodeModel> {
 
 	@Autowired
-	protected AbstractNodeService<T> service;
+	protected AbstractService<T> service;
 	
 	@GetMapping(value = "/")
 	@ResponseBody()

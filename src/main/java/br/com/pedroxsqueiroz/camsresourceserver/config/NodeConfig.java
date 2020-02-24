@@ -20,5 +20,19 @@ public class NodeConfig extends NodeModel {
 	public void setName(String name) 
 	{
 		super.setName(name);
-	}	
+	}
+	
+	@Value("${messaging_broker.address}") 
+	@Override
+	public void setMessagingBrokerAddress(String name) 
+	{
+		super.setMessagingBrokerAddress(name);
+	}
+	
+	@Value("${messaging_broker.port}")
+	@Override
+	public void setMessagingBrokerPort(Integer messagingBrokerPort) {
+		// TODO Auto-generated method stub
+		super.setMessagingBrokerPort(messagingBrokerPort);
+	}
 }
